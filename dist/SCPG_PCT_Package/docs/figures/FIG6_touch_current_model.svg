@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <title>SCPG - Touch Current Model IEC 60990 (FIG.6)</title>
+  <defs>
+    <style><![CDATA[
+      .blk{fill:#f8fbff;stroke:#1f3a5f;stroke-width:2}
+      .lbl{font-family:Arial,Helvetica,sans-serif;font-size:16px;fill:#0b132b}
+      .note{font-family:Arial,Helvetica,sans-serif;font-size:14px;fill:#415a77}
+      .wire{stroke:#1f3a5f;stroke-width:2;fill:none}
+      .gnd{stroke:#6c757d;stroke-width:2}
+    ]]></style>
+  </defs>
+
+  <text class="lbl" x="40" y="40" style="font-size:22px;">FIG. 6 — Touch current model (IEC 60990)</text>
+
+  <!-- Balanced output -->
+  <rect class="blk" x="80" y="120" width="220" height="70" rx="8"/>
+  <text class="lbl" x="90" y="155">Balanced output (140)</text>
+  <text class="note" x="90" y="175">vout+, vout−</text>
+
+  <!-- Y-caps -->
+  <rect class="blk" x="360" y="110" width="200" height="90" rx="8"/>
+  <text class="lbl" x="370" y="155">Y‑capacitors (150)</text>
+
+  <!-- Body network -->
+  <rect class="blk" x="720" y="100" width="320" height="120" rx="10"/>
+  <text class="lbl" x="730" y="140">IEC 60990 body network</text>
+  <text class="note" x="730" y="165">R_body, C_body equivalent</text>
+
+  <line class="wire" x1="300" y1="155" x2="360" y2="155"/>
+  <line class="wire" x1="560" y1="155" x2="720" y2="155"/>
+
+  <line class="gnd" x1="840" y1="220" x2="840" y2="250"/>
+  <line class="gnd" x1="820" y1="250" x2="860" y2="250"/>
+  <line class="gnd" x1="825" y1="250" x2="835" y2="260"/>
+  <line class="gnd" x1="860" y1="250" x2="850" y2="260"/>
+
+  <text class="note" x="760" y="270">measure I_touch vs limits</text>
+</svg>

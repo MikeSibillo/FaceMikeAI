@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <title>SCPG - Typical Waveforms (FIG.4)</title>
+  <defs>
+    <style><![CDATA[
+      .axis{stroke:#333;stroke-width:1}
+      .sig{fill:none;stroke-width:2}
+      .vdiff{stroke:#1f77b4}
+      .vcm{stroke:#2ca02c}
+      .iout{stroke:#d62728}
+      .pci{stroke:#9467bd}
+      .lbl{font-family:Arial,Helvetica,sans-serif;font-size:16px;fill:#0b132b}
+      .note{font-family:Arial,Helvetica,sans-serif;font-size:14px;fill:#415a77}
+    ]]></style>
+  </defs>
+
+  <text class="lbl" x="40" y="40" style="font-size:22px;">FIG. 4 — Waveforms: vdiff, vcm, iout, PCI</text>
+
+  <!-- Axes -->
+  <g transform="translate(60,80)">
+    <line class="axis" x1="0" y1="120" x2="1080" y2="120"/>
+    <line class="axis" x1="0" y1="0" x2="0" y2="240"/>
+    <text class="note" x="900" y="140">time</text>
+    <text class="note" x="-10" y="-10">V/I</text>
+
+    <!-- vdiff sinus -->
+    <path class="sig vdiff" d="M0,120 C40,80 80,40 120,80 C160,120 200,160 240,120 C280,80 320,40 360,80 C400,120 440,160 480,120 C520,80 560,40 600,80 C640,120 680,160 720,120 C760,80 800,40 840,80 C880,120 920,160 960,120 1000,80 1040,40 1080,80"/>
+    <text class="note" x="20" y="30">vdiff</text>
+
+    <!-- vcm slow bias -->
+    <path class="sig vcm" d="M0,110 C200,100 400,105 600,115 C800,125 1000,118 1080,112"/>
+    <text class="note" x="120" y="100">vcm</text>
+
+    <!-- iout shifted -->
+    <path class="sig iout" d="M0,120 C40,100 80,80 120,100 C160,120 200,140 240,120 C280,100 320,80 360,100 C400,120 440,140 480,120 C520,100 560,80 600,100 C640,120 680,140 720,120 C760,100 800,80 840,100 C880,120 920,140 960,120 1000,100 1040,80 1080,100"/>
+    <text class="note" x="20" y="190">iout</text>
+  </g>
+
+  <!-- PCI axis -->
+  <g transform="translate(60,380)">
+    <line class="axis" x1="0" y1="120" x2="1080" y2="120"/>
+    <line class="axis" x1="0" y1="0" x2="0" y2="240"/>
+    <text class="note" x="900" y="140">time</text>
+    <text class="note" x="-10" y="-10">PCI</text>
+
+    <path class="sig pci" d="M0,200 L200,200 L400,170 L600,140 L800,100 L900,80 L1000,60 L1080,40"/>
+    <text class="note" x="870" y="70">PCI rises</text>
+
+    <line x1="0" y1="80" x2="1080" y2="80" stroke="#999" stroke-dasharray="6 6"/>
+    <text class="note" x="10" y="75">threshold 0.83</text>
+  </g>
+</svg>

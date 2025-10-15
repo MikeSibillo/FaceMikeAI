@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <title>SCPG - Impedance Estimation via RLS (FIG.5)</title>
+  <defs>
+    <style><![CDATA[
+      .axis{stroke:#333;stroke-width:1}
+      .curve{fill:none;stroke-width:2}
+      .req{stroke:#1f77b4}
+      .xeq{stroke:#2ca02c}
+      .lbl{font-family:Arial,Helvetica,sans-serif;font-size:16px;fill:#0b132b}
+      .note{font-family:Arial,Helvetica,sans-serif;font-size:14px;fill:#415a77}
+      .box{fill:#f8fbff;stroke:#1f3a5f;stroke-width:2}
+    ]]></style>
+  </defs>
+
+  <text class="lbl" x="40" y="40" style="font-size:22px;">FIG. 5 — RLS Estimation of Zs = Req + jXeq</text>
+
+  <g transform="translate(60,80)">
+    <line class="axis" x1="0" y1="240" x2="1080" y2="240"/>
+    <line class="axis" x1="0" y1="0" x2="0" y2="240"/>
+    <text class="note" x="900" y="260">time</text>
+    <text class="note" x="-10" y="-10">Ω</text>
+
+    <path class="curve req" d="M0,200 L200,190 L400,180 L600,175 L800,170 L1000,168 L1080,166"/>
+    <text class="note" x="100" y="190">Req</text>
+
+    <path class="curve xeq" d="M0,120 L200,125 L400,130 L600,140 L800,155 L1000,170 L1080,185"/>
+    <text class="note" x="860" y="160">Xeq drift</text>
+  </g>
+
+  <rect class="box" x="760" y="420" width="360" height="280" rx="10"/>
+  <text class="lbl" x="770" y="450">RLS block (λ=0.995)</text>
+  <text class="note" x="770" y="475">inputs: vdiff, i_out</text>
+  <text class="note" x="770" y="495">state: θ=[Req, Xeq]</text>
+  <text class="note" x="770" y="515">outputs: Zs estimate</text>
+</svg>
