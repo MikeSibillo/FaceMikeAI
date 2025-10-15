@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <title>SCPG - Control Diagram (FIG.2)</title>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0,0 12,4 0,8" fill="#1f3a5f"/>
+    </marker>
+    <style><![CDATA[
+      .blk{fill:#f8fbff;stroke:#1f3a5f;stroke-width:2}
+      .sum{fill:#fff;stroke:#1f3a5f;stroke-width:2}
+      .lbl{font-family:Arial,Helvetica,sans-serif;font-size:16px;fill:#0b132b}
+      .note{font-family:Arial,Helvetica,sans-serif;font-size:14px;fill:#415a77}
+      .wire{stroke:#1f3a5f;stroke-width:2;fill:none;marker-end:url(#arrow)}
+      .dashed{stroke:#1f3a5f;stroke-width:2;fill:none;stroke-dasharray:6 6}
+    ]]></style>
+  </defs>
+
+  <text class="lbl" x="40" y="40" style="font-size:22px;">FIG. 2 — Control and Estimation Diagram</text>
+
+  <!-- Outputs measured -->
+  <rect class="blk" x="60" y="90" width="200" height="60" rx="8"/>
+  <text class="lbl" x="70" y="120">vout+, vout−, i_out</text>
+  <line class="wire" x1="260" y1="120" x2="320" y2="120"/>
+
+  <!-- Compute vdiff and vcm -->
+  <rect class="blk" x="320" y="90" width="180" height="60" rx="8"/>
+  <text class="lbl" x="330" y="120">Compute vdiff, vcm</text>
+  <line class="wire" x1="500" y1="120" x2="560" y2="120"/>
+
+  <!-- PLL/SDFT -->
+  <rect class="blk" x="560" y="80" width="190" height="70" rx="8"/>
+  <text class="lbl" x="570" y="115">PLL / SDFT (ζ=0.707)</text>
+  <line class="wire" x1="750" y1="120" x2="820" y2="120"/>
+
+  <!-- RLS estimator -->
+  <rect class="blk" x="560" y="170" width="190" height="80" rx="8"/>
+  <text class="lbl" x="570" y="205">RLS (λ=0.995)</text>
+  <text class="note" x="570" y="225">θ=[Req, Xeq]</text>
+  <line class="wire" x1="500" y1="140" x2="560" y2="200"/>
+  <line class="wire" x1="260" y1="120" x2="560" y2="200"/>
+  <line class="wire" x1="750" y1="210" x2="820" y2="210"/>
+
+  <!-- AIM-X core -->
+  <rect class="blk" x="820" y="80" width="240" height="210" rx="10"/>
+  <text class="lbl" x="830" y="110">AIM‑X predictive core</text>
+  <text class="note" x="830" y="135">features: Vrms, Irms, Vcm,rms, Δφ, dΔφ/dt, Re/Im(Zs), T, spectra</text>
+  <text class="note" x="830" y="160">MLP (128‑64‑32, GELU)</text>
+  <text class="note" x="830" y="185">outputs: ΔZs, Δφ, Risk, SoH, PCI</text>
+  <line class="wire" x1="1010" y1="185" x2="1080" y2="185"/>
+
+  <!-- Summing junction and control law -->
+  <circle class="sum" cx="1080" cy="185" r="18"/>
+  <text class="lbl" x="1073" y="191">Σ</text>
+  <text class="note" x="1015" y="175">setpoints</text>
+  <text class="note" x="960" y="225">PCI &amp; actions</text>
+  <line class="wire" x1="1080" y1="203" x2="1150" y2="240"/>
+  <rect class="blk" x="1120" y="240" width="60" height="40" rx="6"/>
+  <text class="note" x="1126" y="264">limits</text>
+
+  <rect class="blk" x="1020" y="260" width="240" height="80" rx="10"/>
+  <text class="lbl" x="1030" y="290">PWM law</text>
+  <text class="note" x="1030" y="310">Δd = Kp·e_v + Ki∫e_v + Kφ·e_φ + Kcm·sign(Vcm)</text>
+
+  <line class="wire" x1="1140" y1="340" x2="1140" y2="420"/>
+  <rect class="blk" x="1040" y="420" width="200" height="60" rx="8"/>
+  <text class="lbl" x="1050" y="455">Branch selection Zs1/Zs2</text>
+
+  <!-- Outputs to plant and interlock -->
+  <line class="wire" x1="1140" y1="480" x2="1060" y2="560"/>
+  <rect class="blk" x="920" y="540" width="240" height="60" rx="8"/>
+  <text class="lbl" x="930" y="575">Interlock matrix (trip)</text>
+
+  <line class="dashed" x1="1140" y1="340" x2="1140" y2="80"/>
+  <text class="note" x="1090" y="90">dead-time, scheduling</text>
+</svg>

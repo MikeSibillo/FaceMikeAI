@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <title>SCPG - Redundant Interlock Matrix (FIG.3)</title>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0,0 12,4 0,8" fill="#1f3a5f"/>
+    </marker>
+    <style><![CDATA[
+      .blk{fill:#f8fbff;stroke:#1f3a5f;stroke-width:2}
+      .lbl{font-family:Arial,Helvetica,sans-serif;font-size:16px;fill:#0b132b}
+      .note{font-family:Arial,Helvetica,sans-serif;font-size:14px;fill:#415a77}
+      .wire{stroke:#1f3a5f;stroke-width:2;fill:none;marker-end:url(#arrow)}
+      .or{fill:#fff;stroke:#1f3a5f;stroke-width:2}
+    ]]></style>
+  </defs>
+
+  <text class="lbl" x="40" y="40" style="font-size:22px;">FIG. 3 — Redundant Interlock Matrix and Dual Relays</text>
+
+  <!-- Trip sources -->
+  <rect class="blk" x="60" y="100" width="220" height="60" rx="8"/>
+  <text class="lbl" x="70" y="135">PCI ≥ 0.83</text>
+
+  <rect class="blk" x="60" y="180" width="220" height="60" rx="8"/>
+  <text class="lbl" x="70" y="215">Touch current > limit</text>
+  <text class="note" x="70" y="235">IEC 60990</text>
+
+  <rect class="blk" x="60" y="260" width="220" height="60" rx="8"/>
+  <text class="lbl" x="70" y="295">Over‑current / short</text>
+
+  <rect class="blk" x="60" y="340" width="220" height="60" rx="8"/>
+  <text class="lbl" x="70" y="375">Over‑temperature</text>
+
+  <rect class="blk" x="60" y="420" width="220" height="60" rx="8"/>
+  <text class="lbl" x="70" y="455">Watchdog timeout</text>
+
+  <!-- OR gates per channel -->
+  <path class="or" d="M340,110 C380,110 380,150 340,150 C360,135 360,125 340,110 Z"/>
+  <text class="lbl" x="350" y="140">OR</text>
+  <path class="or" d="M340,230 C380,230 380,270 340,270 C360,255 360,245 340,230 Z"/>
+  <text class="lbl" x="350" y="260">OR</text>
+
+  <line class="wire" x1="280" y1="130" x2="340" y2="130"/>
+  <line class="wire" x1="280" y1="210" x2="340" y2="250"/>
+  <line class="wire" x1="280" y1="290" x2="340" y2="250"/>
+  <line class="wire" x1="280" y1="370" x2="340" y2="250"/>
+  <line class="wire" x1="280" y1="450" x2="340" y2="130"/>
+
+  <!-- Drivers -->
+  <rect class="blk" x="420" y="110" width="160" height="60" rx="8"/>
+  <text class="lbl" x="430" y="145">Coil driver CH‑A</text>
+  <rect class="blk" x="420" y="230" width="160" height="60" rx="8"/>
+  <text class="lbl" x="430" y="265">Coil driver CH‑B</text>
+
+  <line class="wire" x1="380" y1="130" x2="420" y2="140"/>
+  <line class="wire" x1="380" y1="250" x2="420" y2="260"/>
+
+  <!-- Relays -->
+  <rect class="blk" x="620" y="100" width="180" height="60" rx="8"/>
+  <text class="lbl" x="630" y="135">Relay A (191)</text>
+  <rect class="blk" x="620" y="220" width="180" height="60" rx="8"/>
+  <text class="lbl" x="630" y="255">Relay B (192)</text>
+
+  <line class="wire" x1="580" y1="140" x2="620" y2="130"/>
+  <line class="wire" x1="580" y1="260" x2="620" y2="250"/>
+
+  <!-- Output line -->
+  <line class="wire" x1="800" y1="130" x2="1040" y2="130"/>
+  <line class="wire" x1="800" y1="250" x2="1040" y2="250"/>
+  <rect class="blk" x="1040" y="90" width="120" height="240" rx="10"/>
+  <text class="lbl" x="1050" y="170">Load / Output</text>
+
+  <text class="note" x="620" y="310">Disconnection time &lt; 3 ms</text>
+</svg>
