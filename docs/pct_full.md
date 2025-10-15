@@ -76,14 +76,43 @@ La FIG. 3 mostra le sorgenti di trip (PCI, touch current, over‑current, over�
 
 [[FIG3]]
 
-## Rivendicazioni (bozza)
-1) Generatore SCPG comprendente front‑end protetto, stadio isolato con uscita bilanciata, rete sensori, controllore AIM‑X che calcola PCI e comanda compensazione e interlock per ridurre \(V_{cm}\), mantenere \(v_{diff}\) entro ±1% e ottenere trip <3 ms.  
-2) Stimatore RLS con \(\lambda=0.995\) per \(R_{eq}\) e \(X_{eq}\).  
-3) AIM‑X con MLP 128‑64‑32 (GELU) che fornisce \(\Delta Z_s\), \(\Delta\varphi\), rischio e SoH.  
-4) Legge PWM: \(\Delta d=K_p e_v + K_i\int e_v dt + K_\varphi e_\varphi + K_{cm} \operatorname{sign}(V_{cm,rms})\) con anti‑windup \(\beta=0.5\).  
-5) Trip quando \(PCI\ge 0.83\) o quando la corrente di contatto stimata eccede i limiti IEC 60990.  
-6) Metodo: campionamento, stima di fase, stima di \(Z_s\) via RLS, calcolo PCI, retuning/re‑routing e trip entro 3 ms.  
-7) Supporto di memorizzazione con istruzioni per attuare il metodo.  
+## Rivendicazioni
+1) Generatore industriale a compensazione di sicurezza (SCPG) comprendente: un front‑end protetto con ingresso IEC, filtro EMI e limitatore di sovratensione; uno stadio di potenza isolato configurato per fornire un’uscita alternata bilanciata e flottante; una rete di sensori multi‑fisica con front‑end di acquisizione; un controllore predittivo AIM‑X operativamente connesso a una catena di stima (PLL/SDFT e RLS) e a un attuatore PWM/DDS; una matrice di interlock ridondante con doppi relè; in cui il controllore calcola un indice di confidenza predittivo (PCI) e comanda la compensazione per minimizzare \(v_{cm}\), mantenere \(v_{diff}\) entro ±1% e attuare la disconnessione con tempo inferiore a 3 ms.
+2) Il generatore della rivendicazione 1, in cui la catena di stima comprende un algoritmo RLS con fattore di dimenticanza compreso tra 0.990 e 0.999, configurato per stimare in tempo reale \(R_{eq}\) e \(X_{eq}\) del percorso di sorgente \(Z_s=R_{eq}+jX_{eq}\).
+3) Il generatore di una qualunque delle precedenti, in cui la stima di fase è ottenuta tramite SDFT/PLL con \(\zeta \in [0.6,0.8]\) e \(\omega_n\) compreso tra \(2\pi\cdot 8\) e \(2\pi\cdot 20\,\text{rad/s}\).
+4) Il generatore di una qualunque delle precedenti, in cui AIM‑X comprende un MLP con almeno tre strati (≥32 neuroni per strato) e attivazioni non lineari, addestrato a predire \(\Delta Z_s\), \(\Delta\varphi\), rischio e SoH.
+5) Il generatore di una qualunque delle precedenti, in cui PCI aggrega residui normalizzati su \(V_{rms}, I_{rms}, V_{cm,rms}, \Delta\varphi, \Re/\Im(Z_s)\) e corrente di contatto stimata, con isteresi per prevenire chatter.
+6) Il generatore di una qualunque delle precedenti, in cui la legge di controllo PWM/DDS è \(\Delta d = K_p e_v + K_i \int e_v\,dt + K_\varphi e_\varphi + K_{cm}\,\operatorname{sign}(V_{cm,rms})\) con anti‑windup.
+7) Il generatore di una qualunque delle precedenti, in cui la selezione di ramo tra \(Zs_1\) e \(Zs_2\) è determinata per minimizzare \(\Delta V_{cm}\) a parità di \(v_{diff}\).
+8) Il generatore di una qualunque delle precedenti, in cui la corrente di contatto è stimata mediante un modello equivalente degli Y‑capacitors e della rete corpo IEC 60990 e il trip è attivato quando tale corrente supera un limite predefinito.
+9) Il generatore di una qualunque delle precedenti, in cui il front‑end comprende un filtro EMI conforme a CISPR 11/32 e un limitatore di surge conforme a IEC 61000‑4‑5.
+10) Il generatore di una qualunque delle precedenti, in cui la rete sensori comprende almeno sensori di tensione/corrente, temperatura e vibrazione, con acquisizione a 16 bit a 20 kS/s e decimazione a 2 kS/s.
+11) Il generatore di una qualunque delle precedenti, in cui il watchdog hardware è configurato per forzare lo stato di interlock in caso di fault del controllore o perdita di clock.
+12) Il generatore di una qualunque delle precedenti, in cui il logger forense registra segnali, eventi PCI e comandi di interlock con time‑stamp per analisi post‑evento.
+13) Il generatore di una qualunque delle precedenti, in cui \(v_{diff}\) presenta THD inferiore al 2% e lo sfasamento \(\Delta\varphi\) è regolato a valori prossimi a zero.
+14) Il generatore di una qualunque delle precedenti, in cui i limiti termici sono imposti a 85 °C sul dissipatore e 75 °C sul trasformatore, con trip termico.
+15) Il generatore di una qualunque delle precedenti, realizzato con PCB a 4 strati FR‑4 Tg≥170 °C, creepage/clearance ≥8 mm, finitura ENIG e partizioni EMI con ritorni analogico/digitale separati.
+16) Il generatore di una qualunque delle precedenti, in cui l’inviluppo di sicurezza impone corrente di contatto ≤0.5 mA in condizioni normali e ≤3.5 mA in singolo guasto.
+17) Metodo di funzionamento per un SCPG che comprende: campionare tensioni e correnti; stimare la fase; stimare \(Z_s\) via RLS; calcolare PCI; applicare azioni graduate includendo retuning, re‑routing e attivare l’interlock ridondante entro 3 ms quando si superano le soglie.
+18) Il metodo della rivendicazione 17, in cui i pesi di PCI sono adattati dinamicamente in base allo stato di salute (SoH) stimato.
+19) Supporto di memorizzazione leggibile da elaboratore contenente istruzioni che, se eseguite da un controllore, causano l’attuazione del metodo delle rivendicazioni 17–18.
+20) Sistema secondo una qualunque delle rivendicazioni precedenti, integrato in un contenitore IP54 210×140×80 mm con interassi M4 180×110 mm e porta diagnostica, destinato a banchi prova industriali e laboratori di pre‑compliance.
 
 ## Abstract
 Sorgente AC bilanciata con compensazione safety‑predittiva: minimizza modo comune e corrente di contatto, stabilizza \(v_{diff}\) e previene guasti. Integra front‑end protetto, stadio isolato, rete sensori e interlock ridondante governato da AIM‑X. Il controllore calcola un PCI e agisce per gradi: retuning → re‑routing → trip.
+
+## Informazioni amministrative
+- Dati di priorità, incaricati, disegni allegati (FIG.1–6), documenti citati: [da completare].
+
+## Classificazioni IPC/CPC (proposta)
+- IPC: H02M 7/00; H02H 3/00; G05B 13/02; G01R 31/50.
+- CPC: H02M7/219; H02H3/093; G05B13/027; G01R31/50.
+- Riferimenti normativi: IEC 60990 (rete corpo); IEC 61558, IEC 61010, IEC 62368 (isolamento/creepage); CISPR 11/32 (EMI); IEC 61000‑4‑5 (surge).
+
+## Elenco dei riferimenti (reference numerals)
+100 SCPG; 110 Ingresso IEC; 115 Filtro EMI; 120 Limitatore surge; 130 Trasformatore d’isolamento; 135 Buffer/driver; 140 Uscita bilanciata; 145 Zs1; 146 Zs2; 150 Rete Y‑capacitors; 160 Sensori V/I; 161 Sensore temperatura; 162 Sensore vibrazione; 170 ADC front‑end; 180 MCU/SoC; 181 PLL/SDFT; 182 RLS; 183 AIM‑X; 184 PWM/DDS; 185 Watchdog; 190 Interlock ridondante; 191 Relè A; 192 Relè B; 195 Logger forense; 200 PCI; 210 Porta diagnostica; 220 Alimentazione ausiliaria.
+
+## Dati amministrativi (placeholder)
+- Richiedente, indirizzo: [da completare]
+- Priorità: [numero domanda, data, paese]
+- Agente/mandatario: [da completare]
