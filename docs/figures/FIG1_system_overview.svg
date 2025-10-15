@@ -60,7 +60,7 @@
   <line class="gnd" x1="1100" y1="275" x2="1090" y2="285"/>
   <text class="note" x="1110" y="282">Earth / Chassis</text>
 
-  <!-- Sensors & ADC -->
+  <!-- Sensors &amp; ADC -->
   <rect class="blk" x="820" y="220" width="150" height="70" rx="8"/>
   <text class="lbl" x="830" y="250">Sensors V/I/T/ϖ (160–162)</text>
   <rect class="blk" x="660" y="220" width="140" height="70" rx="8"/>
@@ -97,7 +97,7 @@
   <rect class="blk" x="970" y="520" width="160" height="60" rx="8"/>
   <text class="lbl" x="980" y="555">Forensic logger (195)</text>
 
-  <!-- Control outputs to power stage & interlock -->
+  <!-- Control outputs to power stage &amp; interlock -->
   <line class="wire" x1="685" y1="510" x2="800" y2="510"/>
   <text class="note" x="700" y="500">duty, bias, routing</text>
   <line class="wire" x1="850" y1="520" x2="1030" y2="170"/>

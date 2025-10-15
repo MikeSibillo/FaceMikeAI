@@ -52,7 +52,7 @@
   <circle class="sum" cx="1080" cy="185" r="18"/>
   <text class="lbl" x="1073" y="191">Σ</text>
   <text class="note" x="1015" y="175">setpoints</text>
-  <text class="note" x="960" y="225">PCI & actions</text>
+  <text class="note" x="960" y="225">PCI &amp; actions</text>
   <line class="wire" x1="1080" y1="203" x2="1150" y2="240"/>
   <rect class="blk" x="1120" y="240" width="60" height="40" rx="6"/>
   <text class="note" x="1126" y="264">limits</text>
