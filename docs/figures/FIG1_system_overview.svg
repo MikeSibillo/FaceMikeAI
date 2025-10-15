@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <title>SCPG - System Overview and Functional Block Diagram (FIG.1)</title>
+  <desc>System overview: protected front-end, isolated power stage, sensor layer, AIM-X controller, redundant interlock, balanced output.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0,0 12,4 0,8" fill="#1f3a5f"/>
+    </marker>
+    <style><![CDATA[
+      .blk{fill:#f7f9fc;stroke:#1f3a5f;stroke-width:2}
+      .sub{fill:#fff;stroke:#1f3a5f;stroke-width:1.6}
+      .lbl{font-family:Arial,Helvetica,sans-serif;font-size:16px;fill:#0b132b}
+      .note{font-family:Arial,Helvetica,sans-serif;font-size:14px;fill:#415a77}
+      .wire{stroke:#1f3a5f;stroke-width:2;fill:none;marker-end:url(#arrow)}
+      .sig{stroke:#2a9d8f;stroke-width:2;fill:none}
+      .gnd{stroke:#6c757d;stroke-width:2}
+    ]]></style>
+  </defs>
+
+  <!-- Front-end blocks -->
+  <rect class="blk" x="40" y="80" width="160" height="70" rx="8"/>
+  <text class="lbl" x="50" y="110">IEC inlet (110)</text>
+  <rect class="blk" x="220" y="80" width="180" height="70" rx="8"/>
+  <text class="lbl" x="230" y="110">EMI filter (115)</text>
+  <rect class="blk" x="420" y="80" width="160" height="70" rx="8"/>
+  <text class="lbl" x="430" y="110">Surge limiter (120)</text>
+  <rect class="blk" x="600" y="70" width="180" height="90" rx="8"/>
+  <text class="lbl" x="610" y="105">Isolation transformer (130)</text>
+  <rect class="blk" x="800" y="80" width="170" height="70" rx="8"/>
+  <text class="lbl" x="810" y="110">Buffer / Driver (135)</text>
+  <rect class="blk" x="1000" y="60" width="170" height="110" rx="8"/>
+  <text class="lbl" x="1010" y="95">Balanced output (140)</text>
+  <text class="note" x="1010" y="120">vout+ / vout−</text>
+
+  <!-- Power path wires -->
+  <path class="wire" d="M200,115 L220,115"/>
+  <path class="wire" d="M400,115 L420,115"/>
+  <path class="wire" d="M600,115 L600,115"/>
+  <path class="wire" d="M780,115 L800,115"/>
+  <path class="wire" d="M970,115 L1000,115"/>
+  <path class="wire" d="M200,115 L220,115"/>
+  <path class="wire" d="M40,115 L40,115"/>
+  <line class="wire" x1="200" y1="115" x2="220" y2="115"/>
+  <line class="wire" x1="400" y1="115" x2="420" y2="115"/>
+  <line class="wire" x1="580" y1="115" x2="600" y2="115"/>
+  <line class="wire" x1="780" y1="115" x2="800" y2="115"/>
+  <line class="wire" x1="970" y1="115" x2="1000" y2="115"/>
+
+  <!-- Zs branches and Y-caps near output -->
+  <rect class="sub" x="1010" y="150" width="70" height="40" rx="6"/>
+  <text class="note" x="1015" y="175">Zs1 (145)</text>
+  <rect class="sub" x="1090" y="150" width="70" height="40" rx="6"/>
+  <text class="note" x="1095" y="175">Zs2 (146)</text>
+
+  <rect class="sub" x="1020" y="210" width="120" height="40" rx="6"/>
+  <text class="note" x="1030" y="235">Y-cap network (150)</text>
+  <line class="gnd" x1="1080" y1="250" x2="1080" y2="275"/>
+  <line class="gnd" x1="1060" y1="275" x2="1100" y2="275"/>
+  <line class="gnd" x1="1065" y1="275" x2="1075" y2="285"/>
+  <line class="gnd" x1="1100" y1="275" x2="1090" y2="285"/>
+  <text class="note" x="1110" y="282">Earth / Chassis</text>
+
+  <!-- Sensors & ADC -->
+  <rect class="blk" x="820" y="220" width="150" height="70" rx="8"/>
+  <text class="lbl" x="830" y="250">Sensors V/I/T/ϖ (160–162)</text>
+  <rect class="blk" x="660" y="220" width="140" height="70" rx="8"/>
+  <text class="lbl" x="670" y="250">ADC front-ends (170)</text>
+  <line class="wire" x1="1000" y1="180" x2="970" y2="255"/>
+  <line class="wire" x1="970" y1="255" x2="820" y2="255"/>
+  <line class="wire" x1="820" y1="255" x2="800" y2="255"/>
+  <line class="wire" x1="800" y1="255" x2="730" y2="255"/>
+
+  <!-- MCU/SoC with sub-blocks -->
+  <rect class="blk" x="280" y="330" width="420" height="260" rx="10"/>
+  <text class="lbl" x="300" y="360">MCU / SoC (180)</text>
+  <rect class="sub" x="300" y="380" width="170" height="60" rx="6"/>
+  <text class="note" x="310" y="410">PLL / SDFT (181)</text>
+  <rect class="sub" x="300" y="450" width="170" height="60" rx="6"/>
+  <text class="note" x="310" y="480">RLS estimator (182)</text>
+  <rect class="sub" x="490" y="380" width="190" height="90" rx="6"/>
+  <text class="note" x="500" y="410">AIM‑X predictive core (183)</text>
+  <rect class="sub" x="490" y="480" width="190" height="60" rx="6"/>
+  <text class="note" x="500" y="510">PWM / DDS (184)</text>
+  <rect class="sub" x="280" y="610" width="140" height="40" rx="6"/>
+  <text class="note" x="290" y="635">Watchdog (185)</text>
+
+  <!-- Interconnections to MCU -->
+  <line class="wire" x1="730" y1="255" x2="700" y2="390"/>
+  <line class="wire" x1="730" y1="255" x2="700" y2="470"/>
+  <text class="note" x="705" y="385">phase, Vrms</text>
+  <text class="note" x="705" y="465">V/I samples</text>
+
+  <!-- Interlock and logger -->
+  <rect class="blk" x="760" y="520" width="180" height="70" rx="8"/>
+  <text class="lbl" x="770" y="550">Interlock matrix (190)</text>
+  <text class="note" x="770" y="570">Dual relays A(191) / B(192)</text>
+  <rect class="blk" x="970" y="520" width="160" height="60" rx="8"/>
+  <text class="lbl" x="980" y="555">Forensic logger (195)</text>
+
+  <!-- Control outputs to power stage & interlock -->
+  <line class="wire" x1="685" y1="510" x2="800" y2="510"/>
+  <text class="note" x="700" y="500">duty, bias, routing</text>
+  <line class="wire" x1="850" y1="520" x2="1030" y2="170"/>
+  <text class="note" x="875" y="445">trip command</text>
+
+  <!-- Diagnostic port -->
+  <rect class="sub" x="470" y="610" width="170" height="40" rx="6"/>
+  <text class="note" x="480" y="635">Diagnostics / Port (210)</text>
+
+  <!-- Title label -->
+  <text class="lbl" x="40" y="40" style="font-size:22px;">FIG. 1 — System Overview and Functional Block Diagram</text>
+</svg>
