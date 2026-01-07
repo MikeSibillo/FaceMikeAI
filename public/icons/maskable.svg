@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Tybelos maskable icon">
+  <rect width="512" height="512" fill="#0b1220"/>
+  <circle cx="256" cy="256" r="196" fill="#0f1b33"/>
+  <path d="M160 204h192c12 0 20 10 18 22l-16 92c-2 10-10 16-18 16H176c-8 0-16-6-18-16l-16-92c-2-12 6-22 18-22Z" fill="#22d3ee"/>
+  <path d="M196 188c0-33 27-60 60-60s60 27 60 60" fill="none" stroke="#a78bfa" stroke-width="18" stroke-linecap="round"/>
+  <path d="M212 282h88" stroke="#0b1220" stroke-width="18" stroke-linecap="round"/>
+</svg>
+

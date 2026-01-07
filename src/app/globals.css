@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 11 18 32; /* #0b1220 */
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-950 text-slate-100 antialiased;
+  background: rgb(var(--bg));
+}
+
+/* iPad-friendly tap targets */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* nicer scroll on iOS */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+

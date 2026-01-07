@@ -1,0 +1,39 @@
+{
+  "name": "Tybelos",
+  "short_name": "Tybelos",
+  "description": "Decision OS: riduce il carico decisionale con 1–2 opzioni e memoria decisionale.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Nuova decisione",
+      "short_name": "Nuova",
+      "url": "/nuova"
+    },
+    {
+      "name": "Log decisionale",
+      "short_name": "Log",
+      "url": "/log"
+    }
+  ]
+}
+
