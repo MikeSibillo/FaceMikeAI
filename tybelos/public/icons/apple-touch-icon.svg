@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" rx="40" fill="#0b0f1a"/>
+  <path d="M44 64c0-7 5-12 12-12h68c7 0 12 5 12 12v8c0 7-5 12-12 12H56c-7 0-12-5-12-12v-8z" fill="url(#g)"/>
+  <path d="M44 108c0-7 5-12 12-12h38c7 0 12 5 12 12v8c0 7-5 12-12 12H56c-7 0-12-5-12-12v-8z" fill="#e2e8f0" opacity="0.95"/>
+  <path d="M112 108c0-7 5-12 12-12h0c7 0 12 5 12 12v8c0 7-5 12-12 12h0c-7 0-12-5-12-12v-8z" fill="#22c55e" opacity="0.95"/>
+  <text x="90" y="155" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto" font-size="16" fill="#e2e8f0" opacity="0.92">Tybelos</text>
+</svg>
+
