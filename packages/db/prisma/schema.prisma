@@ -1,0 +1,239 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// === BASELINE (existing) ===
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+  users    User[]
+
+  @@map("organizations")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  organizationId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  projects     Project[]
+
+  @@map("users")
+}
+
+model Project {
+  id             String   @id @default(uuid())
+  name           String
+  organizationId String?
+  createdById    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  createdBy    User?         @relation(fields: [createdById], references: [id])
+  tasks        Task[]
+  milestones   Milestone[]
+
+  voiceSessions OracleVoiceSession[]
+
+  @@map("projects")
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  title     String
+  projectId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project? @relation(fields: [projectId], references: [id])
+
+  @@map("tasks")
+}
+
+model Milestone {
+  id        String   @id @default(uuid())
+  name      String
+  projectId String?
+  dueDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project? @relation(fields: [projectId], references: [id])
+
+  @@map("milestones")
+}
+
+// === ORACLE EXTENDED (existing) ===
+enum OracleMode {
+  SAFE
+  ADVISORY
+}
+
+model OracleConfig {
+  id             String    @id @default(uuid())
+  organizationId String?   @unique
+  enabled        Boolean   @default(false)
+  mode           OracleMode @default(SAFE)
+  provider       String    @default("deterministic")
+  settings       Json?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("oracle_configs")
+}
+
+// === TYBELOS VOICE (new - append only) ===
+enum VoiceSessionMode {
+  MODE_PA
+  MODE_DL
+  MODE_GC
+  MODE_SME
+}
+
+enum VoiceSessionStatus {
+  ACTIVE
+  CLOSED
+}
+
+model OracleVoiceSession {
+  id               String            @id @default(uuid())
+  organizationId   String?
+  projectId        String?
+  mode             VoiceSessionMode  @default(MODE_PA)
+  status           VoiceSessionStatus @default(ACTIVE)
+  createdByUserId  String?
+  startedAt        DateTime         @default(now())
+  endedAt          DateTime?
+  correlationId    String           @unique
+  settings         Json?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  project  Project?              @relation(fields: [projectId], references: [id])
+  chunks   OracleVoiceChunk[]
+  segments OracleTranscriptSegment[]
+  events   OracleMeetingEvent[]
+  artifacts OracleMeetingArtifact[]
+
+  @@map("oracle_voice_sessions")
+}
+
+model OracleVoiceChunk {
+  id           String   @id @default(uuid())
+  sessionId    String
+  chunkIndex   Int
+  mimeType     String   @default("audio/wav")
+  storageKey   String?
+  bytesSha256  String
+  durationMs   Int?
+  createdAt    DateTime @default(now())
+
+  session  OracleVoiceSession      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  segments OracleTranscriptSegment[]
+
+  @@unique([sessionId, chunkIndex])
+  @@map("oracle_voice_chunks")
+}
+
+model OracleTranscriptSegment {
+  id               String   @id @default(uuid())
+  sessionId        String
+  chunkId          String
+  startMs          Int
+  endMs            Int
+  speakerLabel     String
+  text             String
+  confidence       Float?
+  speakerName      String?
+  speakerConfidence Float?
+  createdAt        DateTime @default(now())
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  chunk   OracleVoiceChunk   @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+
+  @@map("oracle_transcript_segments")
+}
+
+model OracleSpeakerProfile {
+  id             String   @id @default(uuid())
+  displayName    String
+  roleLabel      String?
+  organizationId String?
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  voiceprints OracleVoiceprint[]
+
+  @@map("oracle_speaker_profiles")
+}
+
+model OracleVoiceprint {
+  id                String    @id @default(uuid())
+  speakerProfileId  String
+  provider          String
+  embeddingBase64   String?
+  revokedAt         DateTime?
+  createdAt         DateTime  @default(now())
+
+  speakerProfile OracleSpeakerProfile @relation(fields: [speakerProfileId], references: [id], onDelete: Cascade)
+
+  @@map("oracle_voiceprints")
+}
+
+enum MeetingEventType {
+  ACTION_ITEM
+  DECISION_PROPOSAL
+  RISK_FLAG
+  MODE_CHANGE
+  INSIGHT
+}
+
+model OracleMeetingEvent {
+  id        String          @id @default(uuid())
+  sessionId String
+  type      MeetingEventType
+  payload   Json
+  emittedBy String?
+  createdAt DateTime        @default(now())
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("oracle_meeting_events")
+}
+
+enum ArtifactType {
+  MINUTES
+  DECISIONS
+  LEGAL_ACT
+}
+
+model OracleMeetingArtifact {
+  id            String       @id @default(uuid())
+  sessionId     String
+  type          ArtifactType
+  contentMarkdown String?
+  contentJson   Json?
+  checksumSha256 String?
+  generatedBy   String?
+  signedAt      DateTime?
+  createdAt     DateTime     @default(now())
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("oracle_meeting_artifacts")
+}
