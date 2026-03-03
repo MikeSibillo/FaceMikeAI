@@ -1,0 +1,14 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: aztec
+      POSTGRES_PASSWORD: aztec
+      POSTGRES_DB: ai_aztec
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
