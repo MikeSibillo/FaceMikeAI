@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============ Baseline Models ============
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users    User[]
+  projects Project[]
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  organizationId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  projects     Project[]
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  name           String
+  organizationId String
+  createdById    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdBy    User         @relation(fields: [createdById], references: [id], onDelete: Cascade)
+}
+
+// ============ Oracle Extended ============
+model OracleProjectConfig {
+  id        String   @id @default(cuid())
+  projectId String   @unique
+  settings  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============ Oracle Voice Models ============
+model OracleVoiceSession {
+  id              String    @id @default(cuid())
+  organizationId  String?
+  projectId       String?
+  mode            String    @default("MODE_PA") // MODE_PA | MODE_DL | MODE_GC | MODE_SME
+  status          String    @default("active")  // active | closed
+  createdByUserId String?
+  startedAt       DateTime  @default(now())
+  endedAt         DateTime?
+  correlationId   String?
+  settings        Json?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  chunks            OracleVoiceChunk[]
+  transcriptSegments OracleTranscriptSegment[]
+  meetingEvents     OracleMeetingEvent[]
+  meetingArtifacts  OracleMeetingArtifact[]
+}
+
+model OracleVoiceChunk {
+  id         String   @id @default(cuid())
+  sessionId  String
+  chunkIndex Int
+  mimeType   String   @default("audio/wav")
+  storageKey String?  // path in uploads/oracle-voice/
+  bytesSha256 String?
+  durationMs Int?
+  createdAt  DateTime @default(now())
+
+  session  OracleVoiceSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  segments OracleTranscriptSegment[]
+
+  @@index([sessionId])
+}
+
+model OracleTranscriptSegment {
+  id               String   @id @default(cuid())
+  sessionId        String
+  chunkId          String?
+  startMs          Int
+  endMs            Int
+  speakerLabel     String   @default("SPEAKER_1") // SPEAKER_1, SPEAKER_2, or matched name
+  text             String
+  confidence       Float?
+  speakerName      String?
+  speakerConfidence Float?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  chunk   OracleVoiceChunk?  @relation(fields: [chunkId], references: [id], onDelete: SetNull)
+
+  @@index([sessionId])
+  @@index([chunkId])
+}
+
+model OracleSpeakerProfile {
+  id             String   @id @default(cuid())
+  displayName    String
+  roleLabel      String?
+  organizationId String?
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  voiceprints OracleVoiceprint[]
+}
+
+model OracleVoiceprint {
+  id                String    @id @default(cuid())
+  speakerProfileId  String
+  provider          String    @default("deterministic")
+  embeddingEncrypted String?  // base64
+  createdAt         DateTime  @default(now())
+  revokedAt        DateTime?
+
+  speakerProfile OracleSpeakerProfile @relation(fields: [speakerProfileId], references: [id], onDelete: Cascade)
+
+  @@index([speakerProfileId])
+}
+
+model OracleMeetingEvent {
+  id        String   @id @default(cuid())
+  sessionId String
+  type      String   // ACTION_ITEM | DECISION_PROPOSAL | RISK_FLAG | MODE_CHANGE | etc
+  payload   Json?
+  emittedBy String?
+  createdAt DateTime @default(now())
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+}
+
+model OracleMeetingArtifact {
+  id              String    @id @default(cuid())
+  sessionId       String
+  type            String    // MINUTES | DECISIONS | LEGAL_ACT
+  contentMarkdown String?
+  contentJson     Json?
+  checksum        String?   // sha256
+  generatedBy     String?
+  createdAt       DateTime  @default(now())
+  signedAt        DateTime?
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+}
