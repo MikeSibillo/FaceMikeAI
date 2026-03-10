@@ -1,0 +1,12 @@
+node_modules
+dist
+.next
+.git
+coverage
+.turbo
+.env
+.env.local
+*.log
+uploads
+FINAL-DIFF-ORACLE-VOICE.patch
+ai-aztec-oracle-voice-complete.zip

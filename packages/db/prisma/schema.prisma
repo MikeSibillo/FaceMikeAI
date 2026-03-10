@@ -1,0 +1,171 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OracleAdvisory {
+  id             String   @id @default(cuid())
+  organizationId String?
+  mode           String   @default("SAFE")
+  confidence     Float?
+  payload        Json?
+  createdAt      DateTime @default(now())
+}
+
+enum OracleVoiceSessionMode {
+  MODE_PA
+  MODE_DL
+  MODE_GC
+  MODE_SME
+}
+
+enum OracleVoiceSessionStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum OracleMeetingEventType {
+  SEGMENT
+  SPEAKER_CHANGE
+  ACTION_ITEM
+  DECISION_PROPOSAL
+  RISK_FLAG
+  MODE_CHANGE
+  INSIGHT
+  UNCERTAIN_SPEAKER
+}
+
+enum OracleMeetingArtifactType {
+  MINUTES
+  DECISIONS
+  LEGAL_ACT
+}
+
+model OracleVoiceSession {
+  id               String                  @id @default(uuid())
+  organizationId   String?
+  projectId        String?
+  mode             OracleVoiceSessionMode  @default(MODE_PA)
+  status           OracleVoiceSessionStatus @default(ACTIVE)
+  createdByUserId  String?
+  startedAt        DateTime                @default(now())
+  endedAt          DateTime?
+  correlationId    String?
+  settings         Json?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  chunks     OracleVoiceChunk[]
+  segments   OracleTranscriptSegment[]
+  events     OracleMeetingEvent[]
+  artifacts  OracleMeetingArtifact[]
+}
+
+model OracleVoiceChunk {
+  id          String   @id @default(cuid())
+  sessionId   String
+  chunkIndex  Int
+  mimeType    String   @default("audio/wav")
+  storageKey  String?
+  bytesSha256 String?
+  durationMs  Int?
+  createdAt   DateTime @default(now())
+
+  session  OracleVoiceSession        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  segments OracleTranscriptSegment[]
+}
+
+model OracleTranscriptSegment {
+  id               String   @id @default(cuid())
+  sessionId        String
+  chunkId          String
+  startMs          Int
+  endMs            Int
+  speakerLabel     String
+  text             String
+  confidence       Float?
+  speakerName      String?
+  speakerConfidence Float?
+  createdAt        DateTime @default(now())
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  chunk   OracleVoiceChunk   @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+}
+
+model OracleSpeakerProfile {
+  id             String   @id @default(cuid())
+  displayName    String
+  roleLabel      String?
+  organizationId String?
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  voiceprints OracleVoiceprint[]
+}
+
+model OracleVoiceprint {
+  id               String    @id @default(cuid())
+  speakerProfileId String
+  provider         String
+  embeddingBase64  String?
+  revokedAt        DateTime?
+  createdAt        DateTime  @default(now())
+
+  speakerProfile OracleSpeakerProfile @relation(fields: [speakerProfileId], references: [id], onDelete: Cascade)
+}
+
+model OracleMeetingEvent {
+  id        String                @id @default(cuid())
+  sessionId String
+  type      OracleMeetingEventType
+  payload   Json?
+  emittedBy String?
+  createdAt DateTime              @default(now())
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model OracleMeetingArtifact {
+  id              String                  @id @default(cuid())
+  sessionId       String
+  type            OracleMeetingArtifactType
+  contentMarkdown String?
+  contentJson     Json?
+  checksumSha256  String?
+  generatedBy     String?
+  createdAt       DateTime                @default(now())
+  signedAt        DateTime?
+
+  session OracleVoiceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
